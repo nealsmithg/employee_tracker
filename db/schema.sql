@@ -1,15 +1,15 @@
 drop database if exists cms_db;
 create database cms_db;
 
-use cms_db:
+use cms_db;
 
 create table department (
-    id int not null auto_increment primary key,
-    name varchar(30 )not null
+    id int not null primary key,
+    name varchar(30)not null
 );
 
 create table role (
-    id int not null auto_increment primary key,
+    id int not null primary key,
     title varchar(30) not null,
     salary decimal not null,
     dapartment_id int,
@@ -28,5 +28,5 @@ create table employee (
     references role(id)
     on delete set null,
     foreign key (manager_id)
-    references table(id)
+    references employee(id)
 )
