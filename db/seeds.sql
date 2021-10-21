@@ -6,7 +6,7 @@ values  (1, "Front-End Development"),
         (5, "Accounting"),
         (6, "HR");
 
-insert into role (id, title, salary, dapartment_id)
+insert into roles (id, title, salary, department_id)
 values  (13, "Jr. Developer", 50000.00, 1),
         (12, "Sr. Developer", 75000.00, 1),
         (11, "Front-End Manager", 100000.00, 1),
@@ -23,13 +23,13 @@ values  (13, "Jr. Developer", 50000.00, 1),
         (62, "HR clerk", 65000.00, 6),
         (61, "HR Manager", 95000.00, 6);
 
-insert into employee (first_name, last_name, role_id, manager_id)
-values  ("George", "Clooney", 11, ),
-        ("Eddie", "Murphy", 21, ),
-        ("Harrison", "Ford", 31, ),
-        ("Kanye", "West", 41, ),
-        ("Taylor", "Swift", 51, ),
-        ("Queen", "Latifah", 61, ),
+insert into employee (first_name, last_name, roles_id, manager_id)
+values  ("George", "Clooney", 11, null),
+        ("Eddie", "Murphy", 21, null),
+        ("Harrison", "Ford", 31, null),
+        ("Kanye", "West", 41, null),
+        ("Taylor", "Swift", 51, null),
+        ("Queen", "Latifah", 61, null),
         ("Beyonce", "Knowles", 12, 1),
         ("Ben", "Affleck", 13, 1),
         ("Adel", "Ali", 13, 1),
