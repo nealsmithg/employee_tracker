@@ -1,4 +1,4 @@
-insert into department (id, name)
+insert into department (name)
 values  ("Front-End Development"),
         ("Back-End Development"),
         ("Testing"),
