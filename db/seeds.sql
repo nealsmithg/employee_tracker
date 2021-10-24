@@ -1,10 +1,10 @@
 insert into department (id, name)
-values  (1, "Front-End Development"),
-        (2, "Back-End Development"),
-        (3, "Testing"),
-        (4, "Deployment"),
-        (5, "Accounting"),
-        (6, "HR");
+values  ("Front-End Development"),
+        ("Back-End Development"),
+        ("Testing"),
+        ("Deployment"),
+        ("Accounting"),
+        ("HR");
 
 insert into roles (id, title, salary, department_id)
 values  (13, "Jr. Developer", 50000.00, 1),

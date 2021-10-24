@@ -4,7 +4,7 @@ create database cms_db;
 use cms_db;
 
 create table department (
-    id int not null primary key,
+    id int not null auto_increment primary key,
     name varchar(30)not null
 );
 
