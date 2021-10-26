@@ -164,7 +164,38 @@ function addEmployee (){
 };
 
 function updateRole(){
-    
+    let employees = [];
+    let roles = [];
+    db.query('select concat(employee.first_name, " ", employee.last_name) as "name", employee.id from employee;', function (err,results) {
+        results.forEach(element => {
+                employees.push({name: `${element.name}`, value: `${element.id}`},);
+        })
+        db.query('select roles.id, roles.title from roles;', function (err,results) {
+            results.forEach(element => {
+                    roles.push({name: `${element.title}`, value: `${element.id}`},);
+            })
+            inquirer
+                .prompt(
+                    [{
+                        type: "list",
+                        message: "Who would you like to update the role for?",
+                        name: "id",
+                        choices: employees
+                    },
+                    {
+                        type: "list",
+                        message: "What role would you like to give this person?",
+                        name: "role_id",
+                        choices: roles
+                    }]
+                )
+                .then((response) => {
+                    db.query(`update employee set roles_id = ${response.role_id} where id = ${response.id}`);
+                    console.log("Employee role updated.")
+                    hold();
+                })
+        })
+    })
 }
 
 function init(){
