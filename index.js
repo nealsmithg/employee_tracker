@@ -70,7 +70,6 @@ function addRole (){
         results.forEach(element => {
             depts.push({name: `${element.name}`, value: `${element.id}`},);
         });
-    console.log(depts);
     inquirer
         .prompt(
             [{
@@ -166,7 +165,6 @@ function addEmployee (){
             .then ((response) => {
                 let name = response.first_name + " " + response.last_name;
                 db.query(`insert into employee (first_name, last_name, roles_id, manager_id) value ("${response.first_name}", "${response.last_name}", ${response.role}, ${response.manager})`);
-                console.log(response.first_name, response.last_name, response.role, response.manager);
                 console.log(`Employee ${name} added.`);
                 hold();
             })
