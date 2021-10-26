@@ -58,6 +58,12 @@ function addDepartment (){
 };
 
 function addRole (){
+    let depts = [];
+    db.query('select * from department;' , function (err, results) {
+        results.forEach(element => {
+            depts.push({name: `${element.name}`, value: `${element.id}`},);
+        });
+    console.log(depts);
     inquirer
         .prompt(
             [{
@@ -72,42 +78,32 @@ function addRole (){
                 }
             },
             {
-                type: "number",
+                type: "input",
                 name: "id",
                 message: "What is the roles id?",
-                validate: function (name) {
-                    var valid = Number.isInteger(name)
-                    return valid || `Please enter a valid whole number`
-                },
+                validate: async (input) => {
+                    if (!input){
+                        return "Please enter an id.";
+                    }
+                    return true;
+                }
             },
             {
                 type: "input",
                 name: "salary",
                 message: "What is the salary of the role?",
                 validate: async (input) => {
-                    if (!Number.isInteger(input)){
-                        return "Please enter a number";
-                    };
+                    if (!input){
+                        return "Please enter a salary.";
+                    }
                     return true;
                 }
             },
             {
-                type: "input",
+                type: "list",
                 name: "dept_id",
                 message: "What is id for the department this role is in?",
-                validate: async (input) => {
-                    if (!Number.isInteger(input)){
-                        return "Please enter a number";
-                    };
-                    db.query('select * from department' , function (err, results) {
-                        results.forEach(element => {
-                            if (element.id === input){
-                                return true;
-                            }
-                            return "Please enter a department id.";
-                        });
-                    })
-                }
+                choices: depts
             }]
         )
         .then((response) => {
@@ -115,19 +111,20 @@ function addRole (){
             console.log(`Role ${response.title} added.`);
             hold();
         })
+    })
 };
 
 function addEmployee (){
-    let roles = [];
-    let managers = [];
+    let role_name = [];
+    let managers_names = [{name: "none", value: null}];
     db.query('select roles.id, roles.title from roles;' , function (err, results) {
         results.forEach(element => {
-            roles.push(element.title)
+            role_name.push({name: `${element.title}`, value: `${element.id}`},);
         });
         db.query('select concat(employee.first_name, " ", employee.last_name) as "name", employee.id, employee.manager_id from employee;', function (err,results) {
             results.forEach(element => {
                 if (!element.manager_id){
-                    managers.push(element.name);
+                    managers_names.push({name: `${element.name}`, value: `${element.id}`},);
                 }
             })
             inquirer
@@ -146,23 +143,28 @@ function addEmployee (){
                         type: "list",
                         name: "role",
                         message: "What role does this employee have?",
-                        choices: roles
+                        choices: role_name
+                    },
+                    {   
+                        type: "list",
+                        name: "manager",
+                        message: "Who is the manager for this employee?",
+                        choices: managers_names
                     }]
                 )
-            .then((response) => {
-                let role_id;
-                roles.forEach(element => {
-                    if(element.role == response.role){
-                        role_id = element.id;
-                        //TODO: work here
-                    }
-                });
-                db.query(`insert into insert into employee (first_name, last_name, roles_id, manager_id) value ("${response.first_name}, ${response.last_name}, ${roles_id}, ${manager_id}")`);
-            console.log(`Employee ${name} added.`);
-            hold();
+            .then ((response) => {
+                let name = response.first_name + " " + response.last_name;
+                db.query(`insert into employee (first_name, last_name, roles_id, manager_id) value ("${response.first_name}", "${response.last_name}", ${response.role}, ${response.manager})`);
+                console.log(response.first_name, response.last_name, response.role, response.manager);
+                console.log(`Employee ${name} added.`);
+                hold();
             })
         })
     })
+};
+
+function updateRole(){
+    
 }
 
 function init(){
@@ -195,7 +197,7 @@ function init(){
             case "Add an employee" : addEmployee();
                 break;
 
-            case "Update an employee role" :
+            case "Update an employee role" : updateRole();
                 break;
 
             case "Quit" : process.exit(1);

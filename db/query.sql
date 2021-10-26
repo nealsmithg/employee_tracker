@@ -18,3 +18,5 @@ left join employee m on e.manager_id = m.id
 join roles on e.roles_id = roles.id
 join department on department.id = roles.department_id
 order by e.id asc;
+
+insert into insert into employee (first_name, last_name, roles_id, manager_id) value ("${response.first_name}", "${response.last_name}", ${response.role}, ${response.manager})
