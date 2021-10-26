@@ -1,26 +1,28 @@
+//requires for the project
 const inquirer = require("inquirer");
-const mysql = require("mysql2");
 const cTable = require("console.table");
 const logo = require("asciiart-logo");
 const db = require("./db/connection");
 
-
+//displays title
 console.log(logo({name: "Employee Manager"}).render());
 
+//lets the user wait after a command before going to the next task
 function hold (){
     inquirer
         .prompt([{type: "confirm", name :"continue", message: "continue"}])
         .then((response) => {if(response.continue){init()}else{process.exit(1)}});
 };
 
+//shows all dept in a table
 function viewAllDept (){
     db.query('select * from department' , function (err, results) {
         console.table(results);
-        
         hold();
       });
 };
 
+//shows all roles in a table
 function viewAllRoles (){
     db.query('select roles.id, roles.title, roles.salary, department.name from roles join department on   department.id = roles.department_id;' , function (err, results) {
         console.table(results);
@@ -28,6 +30,7 @@ function viewAllRoles (){
       });
 };
 
+//shows all employees in a table
 function viewAllEmployees (){
 db.query('select e.id, concat(e.first_name, " ", e.last_name) as "Name", roles.title, department.name, roles.salary, concat(m.first_name, " ", m.last_name) as "Manager Name" from employee e left join employee m on e.manager_id = m.id join roles on e.roles_id = roles.id join department on department.id = roles.department_id order by e.id asc;' , function (err, results) {
         console.table(results);
@@ -35,6 +38,7 @@ db.query('select e.id, concat(e.first_name, " ", e.last_name) as "Name", roles.t
       });
 };
 
+//adds a department to the department table
 function addDepartment (){
     inquirer
         .prompt(
@@ -57,7 +61,10 @@ function addDepartment (){
         })
 };
 
+//adds a role to the role table
 function addRole (){
+
+    //pulls all departments to be asked for when creating a new role
     let depts = [];
     db.query('select * from department;' , function (err, results) {
         results.forEach(element => {
@@ -114,13 +121,17 @@ function addRole (){
     })
 };
 
+//adds an employee to the employee table
 function addEmployee (){
     let role_name = [];
+    //creates a none value in managers and creates the array for the manager question
     let managers_names = [{name: "none", value: null}];
+    //gathers all roles that have been created
     db.query('select roles.id, roles.title from roles;' , function (err, results) {
         results.forEach(element => {
             role_name.push({name: `${element.title}`, value: `${element.id}`},);
         });
+        //gathers all managers that are in the system
         db.query('select concat(employee.first_name, " ", employee.last_name) as "name", employee.id, employee.manager_id from employee;', function (err,results) {
             results.forEach(element => {
                 if (!element.manager_id){
@@ -163,13 +174,16 @@ function addEmployee (){
     })
 };
 
+//updates an employee role
 function updateRole(){
     let employees = [];
     let roles = [];
+    //gathers all employees curently in the system
     db.query('select concat(employee.first_name, " ", employee.last_name) as "name", employee.id from employee;', function (err,results) {
         results.forEach(element => {
                 employees.push({name: `${element.name}`, value: `${element.id}`},);
         })
+        //gathers all roles curently in the system
         db.query('select roles.id, roles.title from roles;', function (err,results) {
             results.forEach(element => {
                     roles.push({name: `${element.title}`, value: `${element.id}`},);
@@ -198,6 +212,7 @@ function updateRole(){
     })
 }
 
+//brings up the selection minu at the start of the program and after doing an action
 function init(){
     inquirer
         .prompt(
@@ -237,4 +252,5 @@ function init(){
     });
 };
 
+//starts program
 init();

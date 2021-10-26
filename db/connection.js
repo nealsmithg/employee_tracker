@@ -1,3 +1,4 @@
+//creates the conection to the database for the program to function
 const mysql = require("mysql2");
 const connection = mysql.createConnection({
     host: "localhost",
