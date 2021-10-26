@@ -117,6 +117,54 @@ function addRole (){
         })
 };
 
+function addEmployee (){
+    let roles = [];
+    let managers = [];
+    db.query('select roles.id, roles.title from roles;' , function (err, results) {
+        results.forEach(element => {
+            roles.push(element.title)
+        });
+        db.query('select concat(employee.first_name, " ", employee.last_name) as "name", employee.id, employee.manager_id from employee;', function (err,results) {
+            results.forEach(element => {
+                if (!element.manager_id){
+                    managers.push(element.name);
+                }
+            })
+            inquirer
+                .prompt(
+                    [{
+                        type: "input",
+                        name: "first_name",
+                        message: "What is the employee's first name?"
+                    },
+                    {
+                        type: "input",
+                        name: "last_name",
+                        message: "What is the employee's last name?"
+                    },
+                    {
+                        type: "list",
+                        name: "role",
+                        message: "What role does this employee have?",
+                        choices: roles
+                    }]
+                )
+            .then((response) => {
+                let role_id;
+                roles.forEach(element => {
+                    if(element.role == response.role){
+                        role_id = element.id;
+                        //TODO: work here
+                    }
+                });
+                db.query(`insert into insert into employee (first_name, last_name, roles_id, manager_id) value ("${response.first_name}, ${response.last_name}, ${roles_id}, ${manager_id}")`);
+            console.log(`Employee ${name} added.`);
+            hold();
+            })
+        })
+    })
+}
+
 function init(){
     inquirer
         .prompt(
@@ -144,7 +192,7 @@ function init(){
             case "Add a role" : addRole ();
                 break;
 
-            case "Add an employee" :
+            case "Add an employee" : addEmployee();
                 break;
 
             case "Update an employee role" :
