@@ -173,7 +173,7 @@ function addEmployee (){
 };
 
 //updates an employee role
-function updateRole(){
+async function updateRole(){
     let employees = [];
     let roles = [];
     //gathers all employees curently in the system
